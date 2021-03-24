@@ -9,7 +9,6 @@ import logging,requests,json,os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ParseMode
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler,MessageHandler,Filters
-from keep_alive import keep_alive
 
 DefaultLocation = "臺北市"
 
@@ -60,7 +59,7 @@ def start(update, context):
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-
+    print(update.message.chat.id)
     update.message.reply_text('請選擇要查詢區域:', reply_markup=reply_markup)
 
 
@@ -75,12 +74,36 @@ def button(update, context):
     res = rs.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={}&locationName={}".format(os.getenv("WEATHERTOKEN"),query.data))
 
     rsJson = json.loads(res.text)
-    print(rsJson["records"])
     desc = rsJson["records"]["datasetDescription"]
-    ci = rsJson["records"]["location"][0]["weatherElement"][3]["time"][0]["parameter"]["parameterName"]
+    weatherElementList = rsJson["records"]["location"][0]["weatherElement"]
     
-    text = '''<b>目前區域</b>
-    ''' + query.data+" "+ci
+    text = "<b>目前區域</b>\n" + query.data+desc+"\n\n"
+    
+
+    for weatherElement in weatherElementList:
+      if(weatherElement["elementName"] == "Wx"):
+        text += "<b>天氣現象</b>\n"
+        elementType = "a"
+      elif (weatherElement["elementName"] == "PoP"):
+        text += "<b>降雨機率</b>\n"
+        elementType = "b"
+      elif (weatherElement["elementName"] == "MinT"):
+        text += "<b>最低溫</b>\n"
+        elementType = "b"
+      elif (weatherElement["elementName"] == "CI"):
+        text += "<b>舒適度</b>\n"
+        elementType = "a"
+      elif (weatherElement["elementName"] == "MaxT"):
+        text += "<b>最高溫</b>\n"
+        elementType = "b"
+
+      if(elementType == "a"):
+        for item in weatherElement["time"]:
+          text += item["startTime"] + " <b>" + item["parameter"]["parameterName"]+"</b>\n"
+      else:
+        for item in weatherElement["time"]:
+          text += item["startTime"] + " <b>" + item["parameter"]["parameterName"]+"</b> "+item["parameter"]["parameterUnit"]+"\n"
+    
 
     query.edit_message_text(text=text,parse_mode=ParseMode.HTML)
 
@@ -105,7 +128,6 @@ def main():
     # on noncommand i.e message - echo the message on Telegram
     updater.dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
 
-    keep_alive()
     # Start the Bot
     updater.start_polling()
 
