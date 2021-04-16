@@ -55,6 +55,18 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+def start(update,context):
+  keyboard = [
+        [
+            InlineKeyboardButton("查詢", callback_data='now'),
+            InlineKeyboardButton("通知", callback_data='notify'),
+        ],
+    ]
+
+  reply_markup = InlineKeyboardMarkup(keyboard)
+
+  update.message.reply_text('選擇功能:', reply_markup=reply_markup)
+
 ##查詢縣市目前往後推36小時的溫度資料
 def now(update, context):
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -90,7 +102,7 @@ def notifyCallback(update, context):
   remove_job_if_exists(str(chat_id), context)
 
   context.job_queue.run_daily(dailyTemp, datetime.time(8,30), context=[chat_id,query.data], name=str(chat_id))
-  update.message.reply_text('設定完成')
+  query.edit_message_text('設定完成')
 
 ##移除原本存在的排程
 def remove_job_if_exists(name, context):
@@ -155,10 +167,11 @@ def main():
     # Post version 12 this will no longer be necessary
     updater = Updater(os.getenv("BOTTOKEN"), use_context=True)
 
+    updater.dispatcher.add_handler(CommandHandler('start',start))
     updater.dispatcher.add_handler(CommandHandler('now', now))
-    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback))
+    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='^now$'))
     updater.dispatcher.add_handler(CommandHandler('notify', notify))
-    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback))
+    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback,pattern='^notify$'))
     updater.dispatcher.add_handler(CommandHandler('help', help_command))
 
     # on noncommand i.e message - echo the message on Telegram
