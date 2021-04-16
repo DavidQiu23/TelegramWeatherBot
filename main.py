@@ -146,7 +146,7 @@ def help_command(update, context):
     update.message.reply_text(text = 
       """*/now* 查詢縣市目前往後推36小時的溫度資料\n
       */notify* 設定每天早上六點要通知哪個縣市的溫度資料
-      """,parse_mode=ParseMode.Markdown)
+      """,parse_mode=ParseMode.MARKDOWN)
 
 
 def main():
