@@ -129,7 +129,9 @@ def notifyCallback(update, context):
 
   remove_job_if_exists(str(chat_id), context)
 
-  context.job_queue.run_daily(dailyTemp, datetime.time(8,30), context=[chat_id,query.data.split(" ")[0]], name=str(chat_id))
+  tz = datetime.timezone(datetime.timedelta(hours=+8))
+
+  context.job_queue.run_daily(dailyTemp, datetime.time(8,30,tzinfo=tz), context=[chat_id,query.data.split(" ")[0]], name=str(chat_id))
   query.edit_message_text('設定完成')
 
 ##移除原本存在的排程
