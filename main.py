@@ -10,66 +10,94 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ParseMode
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler,MessageHandler,Filters
 
 ##鍵盤設定
-keyboard = [
+keyboardNow = [
   [
-      InlineKeyboardButton("宜蘭縣", callback_data='宜蘭縣'),
-      InlineKeyboardButton("花蓮縣", callback_data='花蓮縣'),
-      InlineKeyboardButton("臺東縣", callback_data='臺東縣'),
+      InlineKeyboardButton("宜蘭縣", callback_data='宜蘭縣now'),
+      InlineKeyboardButton("花蓮縣", callback_data='花蓮縣now'),
+      InlineKeyboardButton("臺東縣", callback_data='臺東縣now'),
   ],
   [
-      InlineKeyboardButton("澎湖縣", callback_data='澎湖縣'),
-      InlineKeyboardButton("金門縣", callback_data='金門縣'),
-      InlineKeyboardButton("連江縣", callback_data='連江縣'),
+      InlineKeyboardButton("澎湖縣", callback_data='澎湖縣now'),
+      InlineKeyboardButton("金門縣", callback_data='金門縣now'),
+      InlineKeyboardButton("連江縣", callback_data='連江縣now'),
   ],
   [
-      InlineKeyboardButton("臺北市", callback_data='臺北市'),
-      InlineKeyboardButton("新北市", callback_data='新北市'),
-      InlineKeyboardButton("桃園市", callback_data='桃園市'),
+      InlineKeyboardButton("臺北市", callback_data='臺北市now'),
+      InlineKeyboardButton("新北市", callback_data='新北市now'),
+      InlineKeyboardButton("桃園市", callback_data='桃園市now'),
   ],
   [
-      InlineKeyboardButton("臺中市", callback_data='臺中市'),
-      InlineKeyboardButton("臺南市", callback_data='臺南市'),
-      InlineKeyboardButton("高雄市", callback_data='高雄市'),
+      InlineKeyboardButton("臺中市", callback_data='臺中市now'),
+      InlineKeyboardButton("臺南市", callback_data='臺南市now'),
+      InlineKeyboardButton("高雄市", callback_data='高雄市now'),
   ],
   [
-      InlineKeyboardButton("基隆市", callback_data='基隆市'),
-      InlineKeyboardButton("新竹縣", callback_data='新竹縣'),
-      InlineKeyboardButton("新竹市", callback_data='新竹市'),
+      InlineKeyboardButton("基隆市", callback_data='基隆市now'),
+      InlineKeyboardButton("新竹縣", callback_data='新竹縣now'),
+      InlineKeyboardButton("新竹市", callback_data='新竹市now'),
   ],
   [
-      InlineKeyboardButton("苗栗縣", callback_data='苗栗縣'),
-      InlineKeyboardButton("彰化縣", callback_data='彰化縣'),
-      InlineKeyboardButton("南投縣", callback_data='南投縣'),
+      InlineKeyboardButton("苗栗縣", callback_data='苗栗縣now'),
+      InlineKeyboardButton("彰化縣", callback_data='彰化縣now'),
+      InlineKeyboardButton("南投縣", callback_data='南投縣now'),
   ],
   [
-      InlineKeyboardButton("雲林縣", callback_data='雲林縣'),
-      InlineKeyboardButton("嘉義縣", callback_data='嘉義縣'),
-      InlineKeyboardButton("嘉義市", callback_data='嘉義市'),
-      InlineKeyboardButton("屏東縣", callback_data='屏東縣'),
+      InlineKeyboardButton("雲林縣", callback_data='雲林縣now'),
+      InlineKeyboardButton("嘉義縣", callback_data='嘉義縣now'),
+      InlineKeyboardButton("嘉義市", callback_data='嘉義市now'),
+      InlineKeyboardButton("屏東縣", callback_data='屏東縣now'),
   ],
 ]
 
+keyboardNotify = [
+  [
+      InlineKeyboardButton("宜蘭縣", callback_data='宜蘭縣notify'),
+      InlineKeyboardButton("花蓮縣", callback_data='花蓮縣notify'),
+      InlineKeyboardButton("臺東縣", callback_data='臺東縣notify'),
+  ],
+  [
+      InlineKeyboardButton("澎湖縣", callback_data='澎湖縣notify'),
+      InlineKeyboardButton("金門縣", callback_data='金門縣notify'),
+      InlineKeyboardButton("連江縣", callback_data='連江縣notify'),
+  ],
+  [
+      InlineKeyboardButton("臺北市", callback_data='臺北市notify'),
+      InlineKeyboardButton("新北市", callback_data='新北市notify'),
+      InlineKeyboardButton("桃園市", callback_data='桃園市notify'),
+  ],
+  [
+      InlineKeyboardButton("臺中市", callback_data='臺中市notify'),
+      InlineKeyboardButton("臺南市", callback_data='臺南市notify'),
+      InlineKeyboardButton("高雄市", callback_data='高雄市notify'),
+  ],
+  [
+      InlineKeyboardButton("基隆市", callback_data='基隆市notify'),
+      InlineKeyboardButton("新竹縣", callback_data='新竹縣notify'),
+      InlineKeyboardButton("新竹市", callback_data='新竹市notify'),
+  ],
+  [
+      InlineKeyboardButton("苗栗縣", callback_data='苗栗縣notify'),
+      InlineKeyboardButton("彰化縣", callback_data='彰化縣notify'),
+      InlineKeyboardButton("南投縣", callback_data='南投縣notify'),
+  ],
+  [
+      InlineKeyboardButton("雲林縣", callback_data='雲林縣notify'),
+      InlineKeyboardButton("嘉義縣", callback_data='嘉義縣notify'),
+      InlineKeyboardButton("嘉義市", callback_data='嘉義市notify'),
+      InlineKeyboardButton("屏東縣", callback_data='屏東縣notify'),
+  ],
+]
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
 logger = logging.getLogger(__name__)
 
-def start(update,context):
-  keyboard = [
-        [
-            InlineKeyboardButton("查詢", callback_data='now'),
-            InlineKeyboardButton("通知", callback_data='notify'),
-        ],
-    ]
-
-  reply_markup = InlineKeyboardMarkup(keyboard)
-
-  update.message.reply_text('選擇功能:', reply_markup=reply_markup)
 
 ##查詢縣市目前往後推36小時的溫度資料
 def now(update, context):
-    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    reply_markup = InlineKeyboardMarkup(keyboardNow)
     print(update.message.chat.id)
     update.message.reply_text('請選擇要查詢的區域:', reply_markup=reply_markup)
 
@@ -90,7 +118,7 @@ def dailyTemp(context):
 
 ##設定每天早上六點要通知哪個縣市的溫度資料
 def notify(update, context):
-  reply_markup = InlineKeyboardMarkup(keyboard)
+  reply_markup = InlineKeyboardMarkup(keyboardNotify)
   update.message.reply_text('請選擇要設定的區域:', reply_markup=reply_markup)
 
 ##notify按下按鈕事件
@@ -157,7 +185,7 @@ def echo(update, context):
 def help_command(update, context):
     update.message.reply_text(text = 
       """*/now* 查詢縣市目前往後推36小時的溫度資料\n
-      */notify* 設定每天早上六點要通知哪個縣市的溫度資料
+*/notify* 設定每天早上六點要通知哪個縣市的溫度資料
       """,parse_mode=ParseMode.MARKDOWN)
 
 
@@ -167,11 +195,10 @@ def main():
     # Post version 12 this will no longer be necessary
     updater = Updater(os.getenv("BOTTOKEN"), use_context=True)
 
-    updater.dispatcher.add_handler(CommandHandler('start',start))
     updater.dispatcher.add_handler(CommandHandler('now', now))
-    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='^now$'))
+    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='now$'))
     updater.dispatcher.add_handler(CommandHandler('notify', notify))
-    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback,pattern='^notify$'))
+    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback,pattern='notify$'))
     updater.dispatcher.add_handler(CommandHandler('help', help_command))
 
     # on noncommand i.e message - echo the message on Telegram
