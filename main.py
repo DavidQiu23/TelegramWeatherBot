@@ -198,9 +198,9 @@ def main():
     updater = Updater(os.getenv("BOTTOKEN"), use_context=True)
 
     updater.dispatcher.add_handler(CommandHandler('now', now))
-    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='now$'))
+    updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='....now$'))
     updater.dispatcher.add_handler(CommandHandler('notify', notify))
-    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback,pattern='notify$'))
+    updater.dispatcher.add_handler(CallbackQueryHandler(notifyCallback,pattern='....notify$'))
     updater.dispatcher.add_handler(CommandHandler('help', help_command))
 
     # on noncommand i.e message - echo the message on Telegram
