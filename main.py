@@ -125,7 +125,7 @@ def notify(update, context):
 def notifyCallback(update, context):
   query = update.callback_query
   query.answer()
-  chat_id = update.message.chat_id
+  chat_id = query.message.chat.id
 
   remove_job_if_exists(str(chat_id), context)
 
