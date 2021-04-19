@@ -109,7 +109,7 @@ def nowCallback(update, context):
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     query.answer()
 
-    query.edit_message_text(text=getTempStr(query.data),parse_mode=ParseMode.HTML)
+    query.edit_message_text(text=getTempStr(query.data.split(" ")[0]),parse_mode=ParseMode.HTML)
 
 ##排程
 def dailyTemp(context):
@@ -129,7 +129,7 @@ def notifyCallback(update, context):
 
   remove_job_if_exists(str(chat_id), context)
 
-  context.job_queue.run_daily(dailyTemp, datetime.time(8,30), context=[chat_id,query.data], name=str(chat_id))
+  context.job_queue.run_daily(dailyTemp, datetime.time(8,30), context=[chat_id,query.data.split(" ")[0]], name=str(chat_id))
   query.edit_message_text('設定完成')
 
 ##移除原本存在的排程
@@ -144,6 +144,8 @@ def remove_job_if_exists(name, context):
 def getTempStr(city):
   rs = requests.session()
   res = rs.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={}&locationName={}".format(os.getenv("WEATHERTOKEN"),city))
+  
+  print(res.text)
 
   rsJson = json.loads(res.text)
   desc = rsJson["records"]["datasetDescription"]
