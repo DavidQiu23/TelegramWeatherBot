@@ -5,7 +5,7 @@
 """
 Basic example for a bot that uses inline keyboards.
 """
-import logging,requests,json,os,datetime
+import logging,requests,json,os,datetime,pytz
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ParseMode
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler,MessageHandler,Filters
 
@@ -129,9 +129,7 @@ def notifyCallback(update, context):
 
   remove_job_if_exists(str(chat_id), context)
 
-  tz = datetime.timezone(datetime.timedelta(hours=+8))
-
-  context.job_queue.run_daily(dailyTemp, datetime.time(8,30,tzinfo=tz), context=[chat_id,query.data.split(" ")[0]], name=str(chat_id))
+  context.job_queue.run_daily(dailyTemp, datetime.time(8,30,tzinfo=pytz.timezone('Asia/Taipei')), context=[chat_id,query.data.split(" ")[0]], name=str(chat_id))
   query.edit_message_text('設定完成')
 
 ##移除原本存在的排程
