@@ -114,7 +114,7 @@ def nowCallback(update, context):
 ##排程
 def dailyTemp(context):
   job = context.job
-  context.bot.send_message(job.context[0], text=getTempStr(job.context[1]))
+  context.bot.send_message(job.context[0], text=getTempStr(job.context[1]),parse_mode=ParseMode.HTML)
 
 ##設定每天早上六點要通知哪個縣市的溫度資料
 def notify(update, context):
