@@ -98,7 +98,6 @@ logger = logging.getLogger(__name__)
 def now(update, context):
 
     reply_markup = InlineKeyboardMarkup(keyboardNow)
-    print(update.message.chat.id)
     update.message.reply_text('請選擇要查詢的區域:', reply_markup=reply_markup)
 
 ##now按下按鈕事件
@@ -144,15 +143,12 @@ def remove_job_if_exists(name, context):
 def getTempStr(city):
   rs = requests.session()
   res = rs.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={}&locationName={}".format(os.getenv("WEATHERTOKEN"),city))
-  
-  print(res.text)
 
   rsJson = json.loads(res.text)
   desc = rsJson["records"]["datasetDescription"]
   weatherElementList = rsJson["records"]["location"][0]["weatherElement"]
   
   text = "<b>目前區域</b>\n" + city+desc+"\n\n"
-  
 
   for weatherElement in weatherElementList:
     if(weatherElement["elementName"] == "Wx"):
