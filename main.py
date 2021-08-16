@@ -6,8 +6,9 @@
 Basic example for a bot that uses inline keyboards.
 """
 import logging,requests,json,os,datetime,pytz
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ParseMode
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ParseMode,TelegramError
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler,MessageHandler,Filters
+from time import sleep
 
 ##鍵盤設定
 keyboardNow = [
@@ -188,6 +189,7 @@ def help_command(update, context):
 
 
 def main():
+  try:
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
@@ -207,6 +209,12 @@ def main():
     # Run the bot until the user presses Ctrl-C or the process receives SIGINT,
     # SIGTERM or SIGABRT
     updater.idle()
+  except TelegramError as e:
+    # These are network problems with Telegram.
+    if e.message in ("Bad Gateway", "Timed out"):
+        sleep(1)
+    else:
+        raise e
 
 
 if __name__ == '__main__':
