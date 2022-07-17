@@ -143,7 +143,7 @@ def remove_job_if_exists(name, context):
 ##取得回覆字串
 def getTempStr(city):
   rs = requests.session()
-  res = rs.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={}&locationName={}".format(os.getenv("WEATHERTOKEN"),city))
+  res = rs.get("https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001?Authorization={}&locationName={}".format(os.getenv("WEATHER_TOKEN"),city))
 
   rsJson = json.loads(res.text)
   desc = rsJson["records"]["datasetDescription"]
@@ -193,7 +193,7 @@ def main():
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
     # Post version 12 this will no longer be necessary
-    updater = Updater(os.getenv("BOTTOKEN"), use_context=True)
+    updater = Updater(os.getenv("TELEGRAM_KEY"), use_context=True)
 
     updater.dispatcher.add_handler(CommandHandler('now', now))
     updater.dispatcher.add_handler(CallbackQueryHandler(nowCallback,pattern='....now$'))
